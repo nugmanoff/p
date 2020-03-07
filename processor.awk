@@ -1,10 +1,14 @@
-# !!! patterns
-# target: /(abstract_)?target .* do/  
-# ws amount: /^\ */ or /^ */
-# !!! execution
-# gawk -v pod_name="" -v pattern="" -f script.awk source-file
-# !!! key-value passing (delimeter is ;)
-# -v pod_options="version=0.9;configurations=['Debug','Beta'];modular_headers=true"
+# @descriptoin: podfile contents processor
+# @usage: gawk -v param_name=param_value -f script_name source_file
+# @params
+# pod_name = "Alamofire"
+# pattern = "(abstract_)?target .* do/"
+# pod_options = "version=0.9;configurations=['Debug','Beta'];modular_headers=true"
+# indent = true
+
+# regexpr: 
+# /(abstract_)?target .* do/  
+# /^\ */ or /^ */
 
 BEGIN {
     print "START\n"
@@ -20,7 +24,8 @@ BEGIN {
 $0 ~ pattern {
     match($0, /^ */)
     print
-    base = substr($0, RSTART, RLENGTH)"  pod '"pod_name"'"
+    indentation = indent == "true" ? substr($0, RSTART, RLENGTH)"  " : ""
+    base = indentation"pod '"pod_name"'"
     for (key in options) {
         if (key == "version") 
             base = base", '"options[key]"'";
