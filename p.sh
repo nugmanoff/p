@@ -1,7 +1,7 @@
 #!/bin/bash
 
 usage() {
-  echo "Usage: shugar [ -a pod_name | -p pattern | -g group | -t target ]"
+  echo "Usage: p [ -a pod_name | -p pattern | -g group | -t target ]"
   exit 2
 }
 
