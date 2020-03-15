@@ -1,7 +1,9 @@
 #!/bin/bash
 
+DEFAULT_PFILE_NAME="PODFILE"
+
 usage() {
-  echo "Usage: p [ -a pod_name | -p pattern | -g group | -t target ]"
+  echo "Usage: p [ -a pod_name | -p pattern | -g group | -t target | -f filepath ]"
   exit 2
 }
 
@@ -25,10 +27,11 @@ set_pattern() {
   fi
 }
 
-while getopts 'a:p:g:t:?h' c
+while getopts 'a:f:p:g:t:?h' c
 do
   case $c in
     a) pod_name=$OPTARG ;;
+    f) filepath=$OPTARG ;;
     p) set_pattern pattern $OPTARG ;;
     g) set_pattern group $OPTARG ;;
     t) set_pattern target $OPTARG ;;
@@ -40,5 +43,14 @@ if [[ -z "${pod_name}" ]]; then
     exit
 fi
 
-output=$(gawk -v pod_name="$pod_name" -v pattern="$pattern" -v indent=true -f processor.awk test/podfile-githawk)
-echo "$output" > test/podfile-githawk
+if [[ ! -z "$filepath" && -f "$filepath" ]]; then
+  :
+elif [[ -f $DEFAULT_PFILE_NAME ]]; then
+  filepath=$DEFAULT_PFILE_NAME
+else
+  echo "No Podfile found"
+  exit
+fi
+
+output=$(gawk -v pod_name="$pod_name" -v pattern="$pattern" -v indent=true -f p.awk $filepath)
+echo "$output" > $filepath
