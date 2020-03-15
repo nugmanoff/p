@@ -1,14 +1,8 @@
-# @descriptoin: podfile contents processor
 # @usage: gawk -v param_name=param_value -f script_name source_file
-# @params
 # pod_name = "Alamofire"
 # pattern = "(abstract_)?target .* do/"
 # pod_options = "version=0.9;configurations=['Debug','Beta'];modular_headers=true"
 # indent = true
-
-# regexpr: 
-# /(abstract_)?target .* do/  
-# /^\ */ or /^ */
 
 BEGIN {
     split(pod_options, arr, ";")
