@@ -36,4 +36,5 @@ $0 ~ pattern && !found {
     }
     print base
     found = 1
+    next
 }1
