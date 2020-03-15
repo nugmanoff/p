@@ -11,7 +11,6 @@
 # /^\ */ or /^ */
 
 BEGIN {
-    print "START\n"
     split(pod_options, arr, ";")
     for (i in arr) {
         n = index(arr[i], "=")
@@ -21,10 +20,11 @@ BEGIN {
     }
 }
 
-$0 ~ pattern {
+$0 ~ pattern && !found {
     match($0, /^ */)
     print
-    indentation = indent == "true" ? substr($0, RSTART, RLENGTH)"  " : ""
+    preceding_indentation = substr($0, RSTART, RLENGTH)
+    indentation = indent == "true" ? preceding_indentation"  " : preceding_indentation
     base = indentation"pod '"pod_name"'"
     for (key in options) {
         if (key == "version") 
@@ -35,9 +35,5 @@ $0 ~ pattern {
             base = base", :"key" => '"options[key]"'";
     }
     print base
-    next
-}
-
-END {
-    print "\nEND"
-}
+    found = 1
+}1
