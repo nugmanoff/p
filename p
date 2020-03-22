@@ -1,6 +1,16 @@
 #!/usr/bin/env sh
 # @TODO \n are missing in the resulting podfile when command is run
 
+# configuration keywords:
+# install!
+# platform
+# project
+# inhibit_all_warnings!
+# use_modular_headers!
+# use_frameworks!
+# supports_swift_versions
+# source
+
 DEFAULT_PFILE_NAME="PODFILE"
 
 usage() {
@@ -73,7 +83,7 @@ output=$(gawk -v pod_name="$pod_name" -v pattern="$pattern" -v indent=true -e "B
     for (key in options) {
         if (key == \"version\") 
             base = base\", '\"options[key]\"'\";
-        else if (key == \"configurations\" || key == \"modular_headers\" || key == \"subspecs\" || key == \"testspecs\") 
+        else if (key == \"configurations\" || key == \"modular_headers\" || key == \"inhibit_warnings\" || key == \"subspecs\" || key == \"testspecs\") 
             base = base\", :\"key\" => \"options[key];
         else 
             base = base\", :\"key\" => '\"options[key]\"'\";
