@@ -18,20 +18,36 @@ BEGIN {
     }
 }
 
-$0 ~ pattern && !found {
-    print
+# if pattern is root, then we say that we have a match at line 1
+pattern == "root" && !found {
     found = NR
+}
+
+# if match was at line 1 and current line is either a comment or whitespace we skip
+/^\s*$/ || $1 == "#" && found == 1 {
+    print
     next
 }
 
-($0 ~ /^\s*$/ || $1 in reserved || $0 == "") && !inserted {
+# 
+$0 ~ pattern && !found {
+    found = NR
     print
     next
+}
+
+found && $1 in reserved && !inserted {
+    print
+    next
+}
+
+found {
+    insert_pod_if_needed()
 }
 
 {
-    insert_pod_if_needed()
-}1
+    print
+}
 
 END {
     insert_pod_if_needed()
@@ -52,5 +68,5 @@ function insert_pod_if_needed() {
         else 
             base = base", :"key" => '"options[key]"'";
     }
-    print base"\n"
+    print base
 }
