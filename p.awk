@@ -20,37 +20,48 @@ BEGIN {
 
 # if pattern is root, then we say that we have a match at line 1
 pattern == "root" && !found {
-    found = NR
+    found_at_currentline()
 }
 
 # if match was at line 1 and current line is either a comment or whitespace we skip
-/^\s*$/ || $1 == "#" && found == 1 {
-    print
-    next
+(/^\s*$/ || $1 == "#") && found == 1 {
+    print_and_next()
 }
 
-# 
+# if we have match and it is our first time, then we say that we have a match at current line
 $0 ~ pattern && !found {
-    found = NR
-    print
-    next
+    found_at_currentline()
+    print_and_next()
 }
 
+# if we have match (root or pattern) and pod was not yet inserted - then we skip reserved lines
 found && $1 in reserved && !inserted {
-    print
-    next
+    found_at_currentline()
+    print_and_next()
 }
 
+# after all skipping and matching is done we insert pod
 found {
     insert_pod_if_needed()
 }
 
+# fallthrough case if no expression gets triggered - just print the current line
 {
     print
 }
 
+# in case if we reached EOF and didn't yet inserted pod (rare case) - insert it right now
 END {
     insert_pod_if_needed()
+}
+
+function print_and_next() {
+    print
+    next
+}
+
+function found_at_currentline() {
+    found = NR
 }
 
 function insert_pod_if_needed() {
