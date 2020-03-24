@@ -1,9 +1,4 @@
-# @usage: gawk -v param_name=param_value -f script_name source_file
-# pod_name = "Alamofire"
-# pattern = "(abstract_)?target .* do/"
-# pod_options = "version=0.9;configurations=['Debug','Beta'];modular_headers=true"
-# indent = true
-BEGIN {
+ {
     split(pod_options, arr, ";")
     for (i in arr) {
         n = index(arr[i], "=")
@@ -11,7 +6,7 @@ BEGIN {
             options[substr(arr[i], 0, n - 1)] = substr(arr[i], n + 1)
         }
     }
-    list="#;install!;platform;project;inhibit_all_warnings!;use_modular_headers!;use_frameworks!;supports_swift_versions;source"
+    list = "#;inherit!;install!;platform;project;inhibit_all_warnings!;use_modular_headers!;use_frameworks!;supports_swift_versions;source"
     split(list, raw, ";")
     for (r in raw) {
         reserved[raw[r]] = 1;
@@ -47,6 +42,7 @@ found {
 
 # fallthrough case if no expression gets triggered - just print the current line
 {
+    prev_line = $0
     print
 }
 
@@ -56,6 +52,7 @@ END {
 }
 
 function print_and_next() {
+    prev_line = $0
     print
     next
 }
@@ -67,8 +64,9 @@ function found_at_currentline() {
 function insert_pod_if_needed() {
     if (inserted) { return }
     inserted = 1
-    match($0, /^ */)
-    preceding_indentation = substr($0, RSTART, RLENGTH)
+    prev_line = pattern == "root" ? "" : prev_line
+    match(prev_line, /^ */)
+    preceding_indentation = substr(prev_line, RSTART, RLENGTH)
     indentation = indent == "true" ? preceding_indentation"  " : preceding_indentation
     base = indentation"pod '"pod_name"'"
     for (key in options) {
