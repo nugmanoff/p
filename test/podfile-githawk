@@ -66,6 +66,9 @@ target 'FreetimeWatch Extension' do
 end
 
 target 'FreetimeTests' do
+pod 'Alamofire'
+pod 'Alamofire'
+pod 'Alamofire'
   
   platform :ios, '11.0'
   
