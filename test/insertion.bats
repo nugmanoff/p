@@ -1,5 +1,7 @@
+dir="$(dirname "$BATS_TEST_DIRNAME")"
+
 @test "insertion target" {
-    result="$(bash ../p -a Alamofire -t Altel -f podfile-altel -d)"
+    result="$(bash $dir/libexec/p -a Alamofire -t Altel -f $BATS_TEST_DIRNAME/podfile-altel -d)"
     text="use_frameworks!
 platform :ios, '10.0'
 inhibit_all_warnings!
@@ -15,7 +17,7 @@ end"
 }
 
 @test "insertion def" {
-   result="$(bash ../p -a Alamofire -f insert_pods -f podfile-gleam -d)"
+   result="$(bash $dir/libexec/p -a Alamofire -g insert_pods -f $BATS_TEST_DIRNAME/podfile-gleam -d)"
    text="def insert_pods
 pod 'Alamofire'
   pod 'Typhoon', '~>4.0’

@@ -55,7 +55,8 @@ else
   exit
 fi
 
-output=$(gawk -v pod_name="$pod_name" -v pattern="$pattern" -v indent=false -e "$(cat p.awk)" $filepath)
+src_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+output=$(gawk -v pod_name="$pod_name" -v pattern="$pattern" -v indent=false -e "$(cat $src_dir/p.awk)" $filepath)
 
 if [[ $debug ]]; then
     echo "$output"
