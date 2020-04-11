@@ -1,0 +1,7 @@
+def my_pods
+  # Fabric
+  pod 'Fabric', '1.7.3'
+  pod 'Crashlytics', '3.10.0'
+  
+# Request
+end
