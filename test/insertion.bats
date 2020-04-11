@@ -1,8 +1,4 @@
-suts=$BATS_TEST_DIRNAME
-
-function p {
-    bash "$(dirname $suts)"/libexec/p "$@"
-}
+load test_helper
 
 @test "insertion target" {
     result="$(p -a Alamofire -t Altel -f $suts/podfile-altel -d)"
