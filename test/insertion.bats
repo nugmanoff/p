@@ -36,3 +36,19 @@ target 'Gleam' do
 end"
     [ "$result" == "$text" ]
 }
+
+@test "insertion root" {
+  result="$(bash $dir/libexec/p -a Alamofire -p "root" -f $BATS_TEST_DIRNAME/podfile-default -d)"
+  text="use_frameworks!
+platform :ios, '10.0'
+inhibit_all_warnings!
+pod 'Alamofire'
+
+target 'Altel' do
+  pod 'R.swift'
+  pod 'Sourcery'
+  pod 'SwiftFormat/CLI'
+  pod 'SwiftLint'
+end"
+[ "$result" == "$text" ]
+}
