@@ -4,7 +4,9 @@ inhibit_all_warnings!
 
 target 'Altel' do
   pod 'R.swift'
-  pod 'Sourcery'
   pod 'SwiftFormat/CLI'
-  pod 'SwiftLint'
+end
+
+def insert_pods
+  pod 'Typhoon', '~>4.0’
 end

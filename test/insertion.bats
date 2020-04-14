@@ -1,7 +1,15 @@
 load test_helper
 
-@test "insertion target" {
-    result="$(p -a Alamofire -t Altel -f $suts/podfile-altel -d)"
+setup() {
+  init
+}
+
+teardown() {
+  rm -rf $suts/temp
+}
+
+@test "insertion into target" {
+    result="$(p -a Alamofire -t Altel -f $suts/temp -d)"
     text="use_frameworks!
 platform :ios, '10.0'
 inhibit_all_warnings!
@@ -9,36 +17,56 @@ inhibit_all_warnings!
 target 'Altel' do
 pod 'Alamofire'
   pod 'R.swift'
-  pod 'Sourcery'
   pod 'SwiftFormat/CLI'
-  pod 'SwiftLint'
-end"
-    [ "$result" == "$text" ]
-}
-
-@test "insertion def" {
-   result="$(p -a Alamofire -g insert_pods -f $suts/podfile-gleam -d)"
-   text="def insert_pods
-pod 'Alamofire'
-  pod 'Typhoon', '~>4.0’
-  pod 'NVActivityIndicatorView', '~>4.4'
-  pod 'SnapKit', '~>4.2'
-  pod 'RxSwift', '~>4.2'
-  pod 'DTCollectionViewManager', '~> 6.4'
-  pod 'HCSStarRatingView', '~> 1.5'
-  pod 'Moya', '~> 11.0'
 end
 
-target 'Gleam' do
-  use_frameworks!
-  # Pods for Gleam
-  insert_pods
+def insert_pods
+  pod 'Typhoon', '~>4.0’
+  # Analytics
 end"
     [ "$result" == "$text" ]
 }
 
-@test "insertion root" {
-  result="$(bash $dir/libexec/p -a Alamofire -p "root" -f $BATS_TEST_DIRNAME/podfile-default -d)"
+@test "insertion into: 1) def group" {
+   result="$(p -a Alamofire -g insert_pods -f $suts/temp -d)"
+   text="use_frameworks!
+platform :ios, '10.0'
+inhibit_all_warnings!
+
+target 'Altel' do
+  pod 'R.swift'
+  pod 'SwiftFormat/CLI'
+end
+
+def insert_pods
+pod 'Alamofire'
+  pod 'Typhoon', '~>4.0’
+  # Analytics
+end"
+    [ "$result" == "$text" ]
+}
+
+@test "insertion into: 2) comment group" {
+   result="$(p -a Alamofire -g Analytics -f $suts/temp -d)"
+   text="use_frameworks!
+platform :ios, '10.0'
+inhibit_all_warnings!
+
+target 'Altel' do
+  pod 'R.swift'
+  pod 'SwiftFormat/CLI'
+end
+
+def insert_pods
+  pod 'Typhoon', '~>4.0’
+  # Analytics
+  pod 'Alamofire'
+end"
+    [ "$result" == "$text" ]
+}
+
+@test "insertion into root" {
+  result="$(p -a Alamofire -p "root" -f $suts/temp -d)"
   text="use_frameworks!
 platform :ios, '10.0'
 inhibit_all_warnings!
@@ -46,9 +74,38 @@ pod 'Alamofire'
 
 target 'Altel' do
   pod 'R.swift'
-  pod 'Sourcery'
   pod 'SwiftFormat/CLI'
-  pod 'SwiftLint'
+end
+
+def insert_pods
+  pod 'Typhoon', '~>4.0’
+  # Analytics
 end"
 [ "$result" == "$text" ]
+}
+
+@test "skipping reserved word" {
+  # checking skipping reserved word after all insertions
+  result="$(p -a Alamofire -p 'root' -f $suts/temp)"
+  result="$(p -a Alamofire -t Altel -f $suts/temp)"
+  result="$(p -a Alamofire -g insert_pods -f $suts/temp -d)"
+
+  text="use_frameworks!
+platform :ios, '10.0'
+inhibit_all_warnings!
+pod 'Alamofire'
+
+target 'Altel' do
+pod 'Alamofire'
+  pod 'R.swift'
+  pod 'SwiftFormat/CLI'
+end
+
+def insert_pods
+pod 'Alamofire'
+  pod 'Typhoon', '~>4.0’
+  # Analytics
+end"
+   
+   [ "$result" = "$text" ]  
 }
