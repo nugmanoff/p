@@ -2,6 +2,14 @@
 
 suts=$BATS_TEST_DIRNAME
 
+setup() {
+    init
+}
+
+teardown() {
+    rm -rf $suts/temp
+}
+
 function p {
     bash "$(dirname $BATS_TEST_DIRNAME)"/libexec/p "$@"
 }
