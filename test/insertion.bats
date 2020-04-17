@@ -17,7 +17,6 @@ inhibit_all_warnings!
 target 'Altel' do
 pod 'Alamofire'
   pod 'R.swift'
-  pod 'SwiftFormat/CLI'
 end
 
 def insert_pods
@@ -35,7 +34,6 @@ inhibit_all_warnings!
 
 target 'Altel' do
   pod 'R.swift'
-  pod 'SwiftFormat/CLI'
 end
 
 def insert_pods
@@ -54,7 +52,6 @@ inhibit_all_warnings!
 
 target 'Altel' do
   pod 'R.swift'
-  pod 'SwiftFormat/CLI'
 end
 
 def insert_pods
@@ -74,7 +71,6 @@ pod 'Alamofire'
 
 target 'Altel' do
   pod 'R.swift'
-  pod 'SwiftFormat/CLI'
 end
 
 def insert_pods
@@ -98,7 +94,6 @@ pod 'Alamofire'
 target 'Altel' do
 pod 'Alamofire'
   pod 'R.swift'
-  pod 'SwiftFormat/CLI'
 end
 
 def insert_pods
