@@ -4,7 +4,7 @@
 DEFAULT_PFILE_NAME="PODFILE"
 
 usage() {
-  echo "Usage: p [ -a pod_name | -p pattern | -g group | -t target | -f filepath | -d debug]"
+  echo "Usage: p [ -a pod_name | -o pod_options | -p pattern | -g group | -t target | -f filepath | -d debug]"
   exit 2
 }
 
@@ -28,10 +28,11 @@ set_pattern() {
   fi
 }
 
-while getopts 'a:f:p:g:t:?hd' c
+while getopts 'a:o:f:p:g:t:?hd' c
 do
   case $c in
     a) pod_name=$OPTARG ;;
+    o) pod_options=$OPTARG ;;
     f) filepath=$OPTARG ;;
     p) set_pattern pattern $OPTARG ;;
     g) set_pattern group $OPTARG ;;
@@ -58,7 +59,7 @@ fi
 SRC="${BASH_SOURCE[0]}"
 SRC="$(realpath "${SRC}")"
 DIR="$(dirname "${SRC}")" 
-output=$(gawk -v pod_name="$pod_name" -v pattern="$pattern" -v indent=false -e "$(cat $DIR/p.awk)" $filepath)
+output=$(gawk -v pod_name="$pod_name" -v pod_options="$pod_options" -v pattern="$pattern" -v indent=false -e "$(cat $DIR/p.awk)" $filepath)
 
 if [[ $debug ]]; then
     echo "$output"
