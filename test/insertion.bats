@@ -9,12 +9,12 @@ teardown() {
 }
 
 @test "insertion into target" {
-    result="$(p -a Alamofire -t Altel -f $suts/temp -d)"
+    result="$(p -a Alamofire -t Croco -f $suts/temp -d)"
     text="use_frameworks!
 platform :ios, '10.0'
 inhibit_all_warnings!
 
-target 'Altel' do
+target 'Croco' do
 pod 'Alamofire'
   pod 'R.swift'
 end
@@ -32,7 +32,7 @@ end"
 platform :ios, '10.0'
 inhibit_all_warnings!
 
-target 'Altel' do
+target 'Croco' do
   pod 'R.swift'
 end
 
@@ -50,7 +50,7 @@ end"
 platform :ios, '10.0'
 inhibit_all_warnings!
 
-target 'Altel' do
+target 'Croco' do
   pod 'R.swift'
 end
 
@@ -69,7 +69,7 @@ platform :ios, '10.0'
 inhibit_all_warnings!
 pod 'Alamofire'
 
-target 'Altel' do
+target 'Croco' do
   pod 'R.swift'
 end
 
@@ -83,7 +83,7 @@ end"
 @test "skipping reserved word" {
   # checking skipping reserved word after all insertions
   result="$(p -a Alamofire -p 'root' -f $suts/temp)"
-  result="$(p -a Alamofire -t Altel -f $suts/temp)"
+  result="$(p -a Alamofire -t Croco -f $suts/temp)"
   result="$(p -a Alamofire -g insert_pods -f $suts/temp -d)"
 
   text="use_frameworks!
@@ -91,7 +91,7 @@ platform :ios, '10.0'
 inhibit_all_warnings!
 pod 'Alamofire'
 
-target 'Altel' do
+target 'Croco' do
 pod 'Alamofire'
   pod 'R.swift'
 end
