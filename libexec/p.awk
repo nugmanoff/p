@@ -1,11 +1,5 @@
- {
-    split(pod_options, arr, ";")
-    for (i in arr) {
-        n = index(arr[i], "=")
-        if (n) {
-            options[substr(arr[i], 0, n - 1)] = substr(arr[i], n + 1)
-        }
-    }
+BEGIN {
+    option_pairs_count = split(pod_options, option_pairs, ";")
     list = "#;inherit!;install!;platform;project;inhibit_all_warnings!;use_modular_headers!;use_frameworks!;supports_swift_versions;source"
     split(list, raw, ";")
     for (r in raw) {
@@ -69,13 +63,27 @@ function insert_pod_if_needed() {
     preceding_indentation = substr(prev_line, RSTART, RLENGTH)
     indentation = indent == "true" ? preceding_indentation"  " : preceding_indentation
     base = indentation"pod '"pod_name"'"
-    for (key in options) {
-        if (key == "version") 
-            base = base", '"options[key]"'";
-        else if (key == "configurations" || key == "modular_headers" || key == "subspecs" || key == "testspecs") 
-            base = base", :"key" => "options[key];
-        else 
-            base = base", :"key" => '"options[key]"'";
+    for (i in option_pairs) {
+        option = option_pairs[i]
+        convert_option_to_pair(option, pair)
+        for (key in pair) {
+            if (key == "version") 
+                base = base", '"pair[key]"'";
+            else if (key == "configurations" || key == "modular_headers" || key == "subspecs" || key == "testspecs") 
+                base = base", :"key" => "pair[key];
+            else 
+                base = base", :"key" => '"pair[key]"'";
+        }
+        # cleanup pair after each option
+        delete pair
     }
+
     print base
+}
+
+function convert_option_to_pair(option, pair) {
+    n = index(option, "=")
+    if (n) {
+        pair[substr(option, 0, n - 1)] = substr(option, n + 1)
+    }
 }
