@@ -1,13 +1,5 @@
 load test_helper
 
-setup() {
-  init
-}
-
-teardown() {
-  rm -rf $suts/temp
-}
-
 @test "insertion into target" {
     result="$(p -a Alamofire -t Croco -f $suts/temp -d)"
     text="use_frameworks!
