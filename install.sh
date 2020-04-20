@@ -19,14 +19,7 @@ abs_dirname() {
   cd "$cwd"
 }
 
-PREFIX="$1"
-if [ -z "$1" ]; then
-  { echo "usage: $0 <prefix>"
-    echo "  e.g. $0 /usr/local"
-  } >&2
-  exit 1
-fi
-
+PREFIX="/usr/local"
 P_ROOT="$(abs_dirname "$0")"
 mkdir -p "$PREFIX"/{bin,libexec}
 cp -R "$P_ROOT"/bin/* "$PREFIX"/bin
