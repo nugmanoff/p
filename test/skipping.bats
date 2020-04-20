@@ -12,7 +12,7 @@ inhibit_all_warnings!
 pod 'Alamofire'
 
 target 'Croco' do
-pod 'Alamofire'
+  pod 'Alamofire'
   pod 'R.swift'
 end
 

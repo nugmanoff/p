@@ -7,7 +7,7 @@ platform :ios, '10.0'
 inhibit_all_warnings!
 
 target 'Croco' do
-pod 'Alamofire'
+  pod 'Alamofire'
   pod 'R.swift'
 end
 

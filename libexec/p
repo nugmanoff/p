@@ -14,17 +14,17 @@ set_pattern() {
     usage
   fi
 
-  local varname=$1
+  type=$1
   shift
 
-  if [[ $varname == "pattern" ]]; then
+  if [[ $type == "pattern" ]]; then
     pattern="$@"
-  elif [[ $varname == "group" ]]; then
+  elif [[ $type == "group" ]]; then
     pattern="((def)|(#)) $@"
-  elif [[ $varname == "target" ]]; then
+  elif [[ $type == "target" ]]; then
     pattern="(abstract_)?target '$@' do"
   else
-    echo "Unkown variable name passed"
+    echo "Unknown variable name passed"
   fi
 }
 
@@ -56,10 +56,17 @@ else
   exit
 fi
 
+if [[ "$type" == "target" || ("$type" == "pattern" && "$pattern" != "root")]]; then
+    indent=true  
+else
+    indent=false
+fi
+
+
 SRC="${BASH_SOURCE[0]}"
 SRC="$(realpath "${SRC}")"
 DIR="$(dirname "${SRC}")" 
-output=$(gawk -v pod_name="$pod_name" -v pod_options="$pod_options" -v pattern="$pattern" -v indent=false -e "$(cat $DIR/p.awk)" $filepath)
+output=$(gawk -v pod_name="$pod_name" -v pod_options="$pod_options" -v pattern="$pattern" -v indent=$indent -e "$(cat $DIR/p.awk)" $filepath)
 
 if [[ $debug ]]; then
     echo "$output"
